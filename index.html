@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phần Mềm Tính Thuế</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./styles/index.css">
+</head>
+<body>
+    <header>
+        <a href="#" onclick="showLogin()">Đăng Nhập</a>
+        <a href="#" onclick="showRegister()" class="register-button">Đăng Ký</a>
+    </header>
+    <main>
+        <div class="welcome-message">Chào mừng bạn đến với phần mềm quản lý thuế</div>
+
+        <!-- Form Đăng Nhập -->
+        <div class="form-container" id="login-form" style="display: none;">
+            <h2>Đăng Nhập</h2>
+            <div>
+                <label for="user-type">Bạn giữ chức vụ:<span class="required">*</span></label>
+                <select id="user-type">
+                    <option value="nhan-vien">Nhân Viên</option>
+                    <option value="truong-phong">Trưởng Phòng</option>
+                    <option value="ke-toan">Kế Toán</option>
+                </select>
+            </div>
+            <div>
+                <label for="cccd">CCCD:<span class="required">*</span></label>
+                <input type="text" id="cccd" maxlength="12" oninput="validateCCCD()">
+                <div id="cccd-error" class="error-message" style="display: none;">CCCD phải có 12 số.</div>
+            </div>
+            <div>
+                <label for="password">Mật Khẩu:<span class="required">*</span></label>
+                <input type="password" id="password">
+            </div>
+            <button onclick="login()">Đăng Nhập</button>
+        </div>
+
+        <!-- Form Đăng Ký -->
+        <div class="form-container" id="register-form" style="display: none;">
+            <h2>Đăng Ký</h2>
+            <div>
+                <label for="name">Họ Tên:<span class="required">*</span></label>
+                <input type="text" id="name">
+            </div>
+            <div>
+                <label for="register-cccd">CCCD:<span class="required">*</span></label>
+                <input type="text" id="register-cccd" maxlength="12" oninput="validateRegisterCCCD()">
+                <div id="register-cccd-error" class="error-message" style="display: none;">CCCD phải có 12 số.</div>
+            </div>
+            <div>
+                <label for="phone">SĐT:<span class="required">*</span></label>
+                <input type="text" id="phone" maxlength="10" oninput="validateRegisterSDT()">
+                <div id="phone-error" class="error-message" style="display: none;">SĐT phải có 10 số.</div>
+            </div>
+            <div>
+                <label for="address">Địa Chỉ:<span class="required">*</span></label>
+                <input type="text" id="address">
+            </div>
+            <div>
+                <label for="register-user-type">Bạn giữ chức vụ:<span class="required">*</span></label>
+                <select id="register-user-type">
+                    <option value="nhan-vien">Nhân Viên</option>
+                    <option value="truong-phong">Trưởng Phòng</option>
+                    <option value="ke-toan">Kế Toán</option>
+                </select>
+            </div>
+            <div>
+                <label for="department">Bạn thuộc phòng/ban:<span class="required">*</span></label>
+                <select id="department">
+                    <option value="phong-1">Phòng 1</option>
+                    <option value="phong-2">Phòng 2</option>
+                    <option value="phong-3">Phòng 3</option>
+                </select>
+            </div>
+            <button onclick="register()">Đăng Ký</button>
+        </div>
+    </main>
+    <script src="./javascript/index.js"></script>
+</body>
+</html>
