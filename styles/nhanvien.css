@@ -6,7 +6,7 @@ body {
     background-color: #f0f0f0;
   }
   .container {
-    width: 800px;
+    width: 100%;
     display: flex;
     border: 1px solid #ddd;
     padding: 20px;
@@ -14,7 +14,7 @@ body {
     background-color: #fff;
   }
   .sidebar {
-    width: 30%;
+    width: 15%;
     background-color: #d9eaf7;
     padding: 15px;
     display: flex;
@@ -62,7 +62,7 @@ body {
     font-weight: bold;
   }
   .content {
-    width: 70%;
+    width: 85%;
     padding: 15px;
     position: relative;
   }
@@ -230,3 +230,10 @@ th {
   width: auto; 
 }
 
+#tax-result {
+  border: 1px solid #005bbb; 
+  padding: 15px; 
+  margin-top: 20px; 
+  background-color: #f9f9f9; 
+  border-radius: 5px; 
+}

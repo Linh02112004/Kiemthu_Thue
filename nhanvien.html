@@ -14,7 +14,7 @@
       <p>Nhân viên</p>
       <button class="button active" onclick="setActiveButton(this)">Nhập thông tin</button>
       <button class="button" onclick="setActiveButton(this)">Xem lương và thuế cá nhân</button>
-      <button class="button" onclick="setActiveButton(this)">Tính thuế</button>
+      <button class="button" onclick="setActiveButton(this)">Tính thử thuế</button>
     </div>
     
     <div class="content">
@@ -46,7 +46,7 @@
         </div>
         <div class="input-group">
           <label for="dependents">Nhập số người phụ thuộc:</label>
-          <input type="number" id="dependents">
+          <input type="number" id="dependents" value="0" min="0">
         </div>
         <div class="input-group">
           <label>Giới tính:</label>
@@ -63,7 +63,7 @@
       <div id="salary-section" style="display: none;">
         <!-- Phần xem lương và thuế cá nhân -->
         <div class="header">
-          <button class="calculate-button" onclick="calculateTax()">Quyết toán thuế</button>
+          <button class="calculate-button" onclick="calculateTaxYear()">Quyết toán thuế</button>
           <div>
               <label for="search-year">Năm:</label>
               <input type="text" id="search-year" placeholder="Nhập năm">
@@ -88,6 +88,26 @@
         </table>
       </div>    
 
+      <div id="tax-section" style="display: none;">
+        <h2>Tính thử thuế</h2>
+        <div class="input-group">
+          <label for="salary">Nhập số lương:</label>
+          <input type="number" id="salary" placeholder="Nhập số lương" required>
+        </div>
+        <div class="input-group">
+          <label for="dependent">Nhập số người phụ thuộc:</label>
+          <input type="number" id="dependent" value="0" required>
+        </div>
+        <div class="calculate-button-container">
+          <button class="calculate-button" onclick="calculateTax()">Tính thuế</button>
+        </div>
+        <div id="tax-result">
+          <h3>Số thuế bạn phải nộp là:</h3>
+          <p id="tax-amount" style="font-weight: bold; font-size: 1.2em;"></p>
+          <p id="tax-amount-words" style="font-style: italic;"></p>
+          <p id="tax-details" style="margin-top: 10px;"></p>
+      </div>
+      </div>
     </div>
   </div>
 
