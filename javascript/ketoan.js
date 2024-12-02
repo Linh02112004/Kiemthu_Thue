@@ -59,8 +59,8 @@ updateTaxTable();
 // Dữ liệu mẫu cho tab "Quản lý nhân viên"
 const employeeData = {
   marketing: [
-    { name: "Trần Quang Minh", id: "MS001", dob: "12/12/1997", address: "HN", phone: "0987654321", dependents: 2, gender: "Nam", image: "image.png" },
-    { name: "Nguyễn Thị Hoa", id: "MS002", dob: "01/03/1995", address: "HN", phone: "0987654322", dependents: 1, gender: "Nữ", image: "image.png" }
+    { name: "Trần Quang Minh", id: "MS001", dob: "12/12/1997", address: "HN", phone: "0987654321", dependents: 2, gender: "Nam", image: "image.png", salary: 12000000, taxId: "123456789" },
+    { name: "Nguyễn Thị Hoa", id: "MS002", dob: "01/03/1995", address: "HN", phone: "0987654322", dependents: 1, gender: "Nữ", image: "image.png", salary: 15000000, taxId: "987654321" }
   ],
   sales: [],
   hr: [],
@@ -327,4 +327,171 @@ function validateCCCD(event) {
 
   // Cập nhật giá trị của trường CCCD
   cccdInput.value = value;
+}
+
+function searchSalary() {
+  const department = document.getElementById('departmentSalaryInput').value;
+  const month = document.getElementById('monthInput').value;
+  const year = document.getElementById('yearSalaryInput').value;
+
+  if (!department || !month || !year) {
+      alert('Vui lòng nhập đầy đủ thông tin!');
+      return;
+  }
+
+  // Mô phỏng dữ liệu nhân viên từ phòng ban
+  const employeeData = [
+      { name: 'Nguyễn Văn A', id: '001', gender: 'Nam', taxCode: 'TX001', salary: 0 },
+      { name: 'Trần Thị B', id: '002', gender: 'Nữ', taxCode: 'TX002', salary: 0 },
+  ];
+
+  const tableBody = document.getElementById('salary-table-body');
+  tableBody.innerHTML = ''; // Xóa nội dung cũ
+
+  employeeData.forEach((employee, index) => {
+      const row = `
+          <tr>
+              <td>${employee.name}</td>
+              <td>${employee.id}</td>
+              <td>${employee.gender}</td>
+              <td>${employee.taxCode}</td>
+              <td><input type="number" min="0" id="salary-${index}" value="${employee.salary}" class="salary-input"></td>
+          </tr>
+      `;
+      tableBody.insertAdjacentHTML('beforeend', row);
+  });
+
+  document.getElementById('salary-table-container').style.display = 'block';
+  document.getElementById('save-salary-btn').style.display = 'block';
+}
+
+function saveSalaries() {
+  const rows = document.querySelectorAll('#salary-table-body tr');
+  const salaries = [];
+
+  rows.forEach((row, index) => {
+      const salaryInput = document.getElementById(`salary-${index}`);
+      const salary = parseFloat(salaryInput.value) || 0;
+      salaries.push(salary);
+  });
+
+  alert('Lương đã được lưu thành công!');
+  console.log('Dữ liệu lương:', salaries);
+}
+
+function setupDeduction() {
+  const month = document.getElementById('deduction-month').value;
+  const year = document.getElementById('deduction-year').value;
+  const selfDeduction = parseFloat(document.getElementById('self-deduction').value) || 0;
+  const dependentDeduction = parseFloat(document.getElementById('dependent-deduction').value) || 0;
+
+  if (!month || !year) {
+      alert('Vui lòng chọn tháng và nhập năm!');
+      return;
+  }
+
+  if (selfDeduction < 0 || dependentDeduction < 0) {
+      alert('Mức giảm trừ không được nhỏ hơn 0!');
+      return;
+  }
+
+  alert('Mức thiết lập vừa được cập nhật vào hệ thống!');
+  console.log('Thiết lập giảm trừ:', {
+      month,
+      year,
+      selfDeduction,
+      dependentDeduction,
+  });
+}
+
+
+
+function searchEmployees() {
+  const month = document.getElementById("monthInput").value;
+  const year = document.getElementById("yearInputs").value;
+  const department = document.getElementById("departmentSalaryInput").value;
+
+  // Kiểm tra xem tất cả các trường đã được điền chưa
+  if (!month || !year || !department) {
+      alert("Vui lòng nhập đầy đủ thông tin!");
+      return;
+  }
+
+  // Kiểm tra nếu năm hợp lệ
+  if (year < 1900 || year > new Date().getFullYear()) {
+      alert("Vui lòng nhập năm hợp lệ!");
+      return;
+  }
+
+  const employees = taxData[department] || [];
+  const tableBody = document.getElementById("employee-table-body");
+  tableBody.innerHTML = ""; // Xóa nội dung cũ
+
+  if (employees.length === 0) {
+      tableBody.innerHTML = `<tr><td colspan="5">Không có nhân viên trong phòng ban này.</td></tr>`;
+  } else {
+      employees.forEach(employee => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+              <td>${employee.name}</td>
+              <td>${employee.id}</td>
+              <td>${employee.taxId}</td>
+              <td>${employee.salary.toLocaleString()}</td>
+              <td id="tax-${employee.id}">Chưa tính</td>
+          `;
+          tableBody.appendChild(row);
+      });
+      document.getElementById("employee-table-container").style.display = "block";
+  }
+}
+
+function calculateTax() {
+  const department = document.getElementById("departmentSalaryInput").value;
+
+  const employees = taxData[department] || [];
+  if (employees.length === 0) {
+      alert("Không có nhân viên trong phòng ban này để tính thuế.");
+      return;
+  }
+
+  employees.forEach(employee => {
+      const salary = employee.salary;
+      const dependent = employee.dependents || 0; // Số người phụ thuộc
+      const deductionsForDependents = 4400000 * dependent; 
+      const tncn = salary - 11000000 - deductionsForDependents;
+
+      let taxAmount = 0;
+      let taxFormula = '';
+
+      // Tính thuế dựa trên thu nhập chịu thuế
+      if (tncn <= 0) {
+          taxAmount = 0;
+          taxFormula = "TNCN phải chịu thuế <= 0, không có thuế phải nộp.";
+      } else if (tncn <= 5000000) {
+          taxAmount = tncn * 0.05;
+          taxFormula = `Số thuế phải nộp = 5% * ${tncn.toFixed(2)} = ${taxAmount.toFixed(2)} VND`;
+      } else if (tncn <= 10000000) {
+          taxAmount = tncn * 0.10 - 250000;
+          taxFormula = `Số thuế phải nộp = 10% * ${tncn.toFixed(2)} - 250,000 = ${taxAmount.toFixed(2)} VND`;
+      } else if (tncn <= 18000000) {
+          taxAmount = tncn * 0.15 - 750000;
+          taxFormula = `Số thuế phải nộp = 15% * ${tncn.toFixed(2)} - 750,000 = ${taxAmount.toFixed(2)} VND`;
+      } else if (tncn <= 32000000) {
+          taxAmount = tncn * 0.20 - 1650000;
+          taxFormula = `Số thuế phải nộp = 20% * ${tncn.toFixed(2)} - 1,650,000 = ${taxAmount.toFixed(2)} VND`;
+      } else if (tncn <= 52000000) {
+          taxAmount = tncn * 0.25 - 3250000;
+          taxFormula = `Số thuế phải nộp = 25% * ${tncn.toFixed(2)} - 3,250,000 = ${taxAmount.toFixed(2)} VND`;
+      } else if (tncn <= 80000000) {
+          taxAmount = tncn * 0.30 - 5850000;
+          taxFormula = `Số thuế phải nộp = 30% * ${tncn.toFixed(2)} - 5,850,000 = ${taxAmount.toFixed(2)} VND`;
+      } else {
+          taxAmount = tncn * 0.35 - 9850000;
+          taxFormula = `Số thuế phải nộp = 35% * ${tncn.toFixed(2)} - 9,850,000 = ${taxAmount.toFixed(2)} VND`;
+      }
+
+      // Cập nhật bảng với số thuế
+      const taxCell = document.getElementById(`tax-${employee.id}`);
+      taxCell.innerText = `${taxAmount.toFixed(2)} VND`;
+  });
 }

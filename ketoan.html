@@ -34,6 +34,9 @@
             <button class="btn active" onclick="switchTab('tab-tax-summary')">Xem quyết toán thuế</button>
             <button class="btn" onclick="switchTab('tab-employee-management')">Quản lý nhân viên</button>
             <button class="btn" onclick="switchTab('tab-account-management')">Quản lý tài khoản</button>
+            <button class="btn" onclick="switchTab('tab-salary-entry')">Nhập lương</button>
+            <button class="btn" onclick="switchTab('tab-deduction-setup')">Thiết lập giảm trừ</button>
+            <button class="btn" onclick ="switchTab('tab-tax-calculation')">Tính thuế</button>
         </div>
 
         <!-- Main Content -->
@@ -168,6 +171,149 @@
                     </table>
                 </div>
             </div>
+
+            <!-- Tab: Nhập lương -->
+<div id="tab-salary-entry" class="tab-content" style="display: none;">
+    <h2>Nhập lương</h2>
+    <div class="filter-section">
+        <label for="departmentSalaryInput">Chọn phòng ban:</label>
+        <select class="filter-input" id="departmentSalaryInput">
+            <option value="marketing">Phòng Marketing</option>
+            <option value="sales">Phòng Kinh doanh</option>
+            <option value="hr">Phòng Nhân sự</option>
+            <option value="sales">Phòng Sales</option>
+        </select>
+
+        <label for="monthInput">Chọn tháng:</label>
+        <select class="filter-input" id="monthInput">
+            <option value="1">Tháng 1</option>
+            <option value="2">Tháng 2</option>
+            <option value="3">Tháng 3</option>
+            <option value="4">Tháng 4</option>
+            <option value="5">Tháng 5</option>
+            <option value="6">Tháng 6</option>
+            <option value="7">Tháng 7</option>
+            <option value="8">Tháng 8</option>
+            <option value="9">Tháng 9</option>
+            <option value="10">Tháng 10</option>
+            <option value="11">Tháng 11</option>
+            <option value="12">Tháng 12</option>
+        </select>
+
+        <input type="number" id="yearSalaryInput" class="filter-input" placeholder="Nhập năm">
+        <button class="search-btn" onclick="searchSalary()">Tìm kiếm</button>
+    </div>
+
+    <div id="salary-table-container" class="table-container" style="display: none;">
+        <table>
+            <thead>
+                <tr>
+                    <th>Họ tên</th>
+                    <th>MSNV</th>
+                    <th>Giới tính</th>
+                    <th>MS thuế</th>
+                    <th>Nhập lương</th>
+                </tr>
+            </thead>
+            <tbody id="salary-table-body">
+                <!-- Nội dung sẽ được hiển thị sau khi nhấn "Tìm kiếm" -->
+            </tbody>
+        </table>
+    </div>
+    <button class="search-btn" onclick="saveSalaries()" style="display: none;" id="save-salary-btn">Lưu lương</button>
+</div>
+
+<!-- Tab: Thiết lập giảm trừ -->
+<div id="tab-deduction-setup" class="tab-content" style="display: none;">
+    <h2>Thiết lập giảm trừ</h2>
+    <div class="filter-section">
+        <label for="deduction-month">Chọn tháng:</label>
+        <select class="filter-input" id="deduction-month">
+            <option value="1">Tháng 1</option>
+            <option value="2">Tháng 2</option>
+            <option value="3">Tháng 3</option>
+            <option value="4">Tháng 4</option>
+            <option value="5">Tháng 5</option>
+            <option value="6">Tháng 6</option>
+            <option value="7">Tháng 7</option>
+            <option value="8">Tháng 8</option>
+            <option value="9">Tháng 9</option>
+            <option value="10">Tháng 10</option>
+            <option value="11">Tháng 11</option>
+            <option value="12">Tháng 12</option>
+        </select>
+
+        <label for="deduction-year">Nhập năm:</label>
+        <input type="number" id="deduction-year" class="filter-input" placeholder="Nhập năm">
+        <button class="search-btn" onclick="searchDeduction()">Tìm kiếm</button>
+    </div>
+
+    <div class="deduction-section">
+        <div class="deduction-box">
+            </br>
+            <label for="self-deduction">Giảm trừ cho bản thân:</label>
+            <input type="number" id="self-deduction" class="filter-input" placeholder="Nhập mức giảm trừ" min="0">
+        </br>
+        </br>
+            <label for="dependent-deduction">Giảm trừ người phụ thuộc:</label>
+            <input type="number" id="dependent-deduction" class="filter-input" placeholder="Nhập mức giảm trừ" min="0">
+        </div>
+        <div>
+            <button class="search-btn" onclick="setupDeduction()">Thiết lập</button>
+        </div>
+    </div>
+</div>
+
+<!-- Tab: Tính thuế -->
+<div id="tab-tax-calculation" class="tab-content" style="display: none;">
+    <h2>Tính thuế</h2>
+    <div class="filter-section">
+        <label for="monthInput">Chọn tháng:</label>
+        <select id="monthInput" class="filter-input">
+            <option value="01">Tháng 1</option>
+            <option value="02">Tháng 2</option>
+            <option value="03">Tháng 3</option>
+            <option value="04">Tháng 4</option>
+            <option value="05">Tháng 5</option>
+            <option value="06">Tháng 6</option>
+            <option value="07">Tháng 7</option>
+            <option value="08">Tháng 8</option>
+            <option value="09">Tháng 9</option>
+            <option value="10">Tháng 10</option>
+            <option value="11">Tháng 11</option>
+            <option value="12">Tháng 12</option>
+        </select>
+
+        <label for="yearInputs">Nhập năm:</label>
+        <input type="number" id="yearInputs" class="filter-input" placeholder="Nhập năm" />
+
+        <label for="departmentSalaryInput">Chọn phòng ban:</label>
+        <select id="departmentSalaryInput" class="filter-input">
+            <option value="marketing">Phòng Marketing</option>
+            <option value="sales">Phòng Sales</option>
+            <option value="hr">Phòng Nhân sự</option>
+            <option value="business">Phòng Kinh doanh</option>
+        </select>
+
+        <button class="search-btn" onclick="searchEmployees()">Tìm kiếm</button>
+        <button class="search-btn" onclick="calculateTax()">Tính thuế</button>
+    </div>
+
+    <div id="employee-table-container" style="display: none;">
+        <table>
+            <thead>
+                <tr>
+                    <th>Họ và tên</th>
+                    <th>MSNV</th>
+                    <th>MS thuế</th>
+                    <th>Lương</th>
+                    <th>Thuế cần nộp</th>
+                </tr>
+            </thead>
+            <tbody id="employee-table-body"></tbody>
+        </table>
+    </div>
+</div>
         </div>
     </div>
 

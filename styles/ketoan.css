@@ -240,3 +240,52 @@ button i {
 button:hover i {
   color: #007bff;
 }
+
+/*tab Nhập lương */
+.filter-section label {
+  margin-right: 10px;
+  font-weight: bold;
+}
+
+.filter-section select,
+.filter-section input {
+  margin-right: 15px;
+  padding: 5px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+
+#salary-table-body input[type="number"] {
+  width: 100%;
+  text-align: right;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+.salary-input {
+  width: 100px;
+  text-align: right;
+}
+
+
+.deduction-section {
+  background-color: #ffffff;
+  font-size: 30px;
+  max-width: 400px;
+  margin: auto;
+}
+
+.deduction-section .filter-input {
+  padding: 5px;
+  font-size: 20px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: auto; /* Để chiều rộng tự động điều chỉnh theo nội dung */
+}
+
+.deduction-box {
+  margin-bottom: 20px;
+}
