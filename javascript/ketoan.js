@@ -30,36 +30,29 @@ function updateTaxTable() {
 
   const employees = taxData[department] || [];
   if (employees.length === 0) {
-    tableBody.innerHTML = `<tr><td colspan="8">Không có nhân viên trong phòng ban này</td></tr>`;
+    tableBody.innerHTML = `<tr><td colspan="6">Không có nhân viên trong phòng ban này</td></tr>`;
     return;
   }
 
   employees.forEach((employee, index) => {
-    const totalTaxDue = calculateTax(employee.salary); // Tính tổng thuế phải nộp
-    const totalTaxReconciliation = (employee.taxPaid || 0) - totalTaxDue; // Quyết toán
-
     const row = document.createElement("tr");
     row.innerHTML = `
       <td>${index + 1}</td>
-      <td>${employee.name || ""}</td>
-      <td>${employee.id || ""}</td>
-      <td>${employee.taxId || ""}</td>
-      <td>${(employee.salary || 0).toLocaleString()}</td>
-      <td>${(employee.taxPaid || 0).toLocaleString()}</td>
-      <td>${totalTaxDue.toLocaleString()}</td>
-      <td>${totalTaxReconciliation.toLocaleString()}</td>
+      <td>${employee.name}</td>
+      <td>${employee.id}</td>
+      <td>${employee.taxId}</td>
+      <td>${employee.salary.toLocaleString()}</td>
+      <td>${employee.tax.toLocaleString()}</td>
     `;
     tableBody.appendChild(row);
   });
 
-  const totalSalary = employees.reduce((sum, employee) => sum + (employee.salary || 0), 0);
-  const totalTaxPaid = employees.reduce((sum, employee) => sum + (employee.taxPaid || 0), 0);
-  const totalTaxDue = employees.reduce((sum, employee) => sum + calculateTax(employee.salary), 0);
+  const totalSalary = employees.reduce((sum, employee) => sum + employee.salary, 0);
+  const totalTax = employees.reduce((sum, employee) => sum + employee.tax, 0);
 
   document.getElementById('total-salary').innerText = `Tổng lương: ${totalSalary.toLocaleString()}`;
-  document.getElementById('total-tax').innerText = `Tổng thuế đã nộp: ${totalTaxPaid.toLocaleString()}`;
+  document.getElementById('total-tax').innerText = `Tổng thuế: ${totalTax.toLocaleString()}`;
 }
-
 
 // Lắng nghe sự kiện thay đổi phòng ban trong tab "Quyết toán thuế"
 document.getElementById("departmentInput").addEventListener("change", updateTaxTable);
@@ -224,7 +217,7 @@ function resetCreateAccountForm() {
 }
 
 // Tạo tài khoản mới
-function createAccount() {
+function createAccount(event) {
   const name = document.getElementById("new-name").value;
   const id = document.getElementById("new-id").value;
   const password = document.getElementById("new-password").value;
@@ -400,11 +393,6 @@ function searchDeduction() {
       return;
   }
 
-  // Xử lý tìm kiếm giảm trừ theo tháng và năm
-  // Giả sử bạn sẽ thực hiện các bước sau:
-  // 1. Gửi yêu cầu đến server hoặc API để lấy dữ liệu giảm trừ
-  // 2. Cập nhật thông tin giảm trừ lên giao diện
-
   // Dữ liệu mẫu
   const deductionData = {
       month: month,
@@ -443,8 +431,6 @@ function setupDeduction() {
   });
 }
 
-
-
 function searchEmployees() {
   const month = document.getElementById("monthInput").value;
   const year = document.getElementById("yearInputs").value;
@@ -453,12 +439,6 @@ function searchEmployees() {
   // Kiểm tra xem tất cả các trường đã được điền chưa
   if (!month || !year || !department) {
       alert("Vui lòng nhập đầy đủ thông tin!");
-      return;
-  }
-
-  // Kiểm tra nếu năm hợp lệ
-  if (year < 1900 || year > new Date().getFullYear()) {
-      alert("Vui lòng nhập năm hợp lệ!");
       return;
   }
 
