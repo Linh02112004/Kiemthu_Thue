@@ -30,29 +30,36 @@ function updateTaxTable() {
 
   const employees = taxData[department] || [];
   if (employees.length === 0) {
-    tableBody.innerHTML = `<tr><td colspan="6">Không có nhân viên trong phòng ban này</td></tr>`;
+    tableBody.innerHTML = `<tr><td colspan="8">Không có nhân viên trong phòng ban này</td></tr>`;
     return;
   }
 
   employees.forEach((employee, index) => {
+    const totalTaxDue = calculateTax(employee.salary); // Tính tổng thuế phải nộp
+    const totalTaxReconciliation = (employee.taxPaid || 0) - totalTaxDue; // Quyết toán
+
     const row = document.createElement("tr");
     row.innerHTML = `
       <td>${index + 1}</td>
-      <td>${employee.name}</td>
-      <td>${employee.id}</td>
-      <td>${employee.taxId}</td>
-      <td>${employee.salary.toLocaleString()}</td>
-      <td>${employee.tax.toLocaleString()}</td>
+      <td>${employee.name || ""}</td>
+      <td>${employee.id || ""}</td>
+      <td>${employee.taxId || ""}</td>
+      <td>${(employee.salary || 0).toLocaleString()}</td>
+      <td>${(employee.taxPaid || 0).toLocaleString()}</td>
+      <td>${totalTaxDue.toLocaleString()}</td>
+      <td>${totalTaxReconciliation.toLocaleString()}</td>
     `;
     tableBody.appendChild(row);
   });
 
-  const totalSalary = employees.reduce((sum, employee) => sum + employee.salary, 0);
-  const totalTax = employees.reduce((sum, employee) => sum + employee.tax, 0);
+  const totalSalary = employees.reduce((sum, employee) => sum + (employee.salary || 0), 0);
+  const totalTaxPaid = employees.reduce((sum, employee) => sum + (employee.taxPaid || 0), 0);
+  const totalTaxDue = employees.reduce((sum, employee) => sum + calculateTax(employee.salary), 0);
 
   document.getElementById('total-salary').innerText = `Tổng lương: ${totalSalary.toLocaleString()}`;
-  document.getElementById('total-tax').innerText = `Tổng thuế: ${totalTax.toLocaleString()}`;
+  document.getElementById('total-tax').innerText = `Tổng thuế đã nộp: ${totalTaxPaid.toLocaleString()}`;
 }
+
 
 // Lắng nghe sự kiện thay đổi phòng ban trong tab "Quyết toán thuế"
 document.getElementById("departmentInput").addEventListener("change", updateTaxTable);
@@ -499,3 +506,55 @@ function calculateTax() {
       taxCell.innerText = `${taxAmount.toFixed(2)} VND`;
   });
 }
+
+function viewSalaryAndTax() {
+  const department = document.getElementById('department-view').value;
+  const month = document.getElementById('month-view').value;
+  const year = document.getElementById('year-view').value;
+
+  if (!year) {
+      alert('Vui lòng nhập năm!');
+      return;
+  }
+
+  // Xử lý logic tìm kiếm (ví dụ: gọi API hoặc cập nhật dữ liệu mẫu)
+  const tableContainer = document.getElementById('salary-tax-table-container');
+  const tableBody = document.getElementById('salary-tax-table-body');
+
+  // Dữ liệu mẫu (thay bằng dữ liệu thực từ hệ thống)
+  const sampleData = [
+      { name: 'Nguyễn Văn A', msnv: '001', taxCode: '123456', salary: 20000000, tax: 2000000 },
+      { name: 'Trần Thị B', msnv: '002', taxCode: '654321', salary: 25000000, tax: 2500000 },
+  ];
+
+  // Xóa dữ liệu cũ
+  tableBody.innerHTML = '';
+
+  // Biến để tính tổng
+  let totalSalary = 0;
+  let totalTax = 0;
+
+  // Thêm dữ liệu mới vào bảng và tính tổng
+  sampleData.forEach(item => {
+      const row = `<tr>
+          <td>${item.name}</td>
+          <td>${item.msnv}</td>
+          <td>${item.taxCode}</td>
+          <td>${item.salary.toLocaleString()} VND</td>
+          <td>${item.tax.toLocaleString()} VND</td>
+      </tr>`;
+      tableBody.innerHTML += row;
+
+      totalSalary += item.salary;
+      totalTax += item.tax;
+  });
+
+  // Hiển thị thông tin tổng hợp
+  document.getElementById('summary-department-name').textContent = `${department}, tháng ${month}, năm ${year}`;
+  document.getElementById('summary-salary').textContent = totalSalary.toLocaleString();
+  document.getElementById('summary-tax').textContent = totalTax.toLocaleString();
+
+  // Hiển thị bảng
+  tableContainer.style.display = 'block';
+}
+

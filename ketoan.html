@@ -35,6 +35,7 @@
             <button class="btn" onclick="switchTab('tab-salary-entry')">Nhập lương</button>
             <button class="btn" onclick="switchTab('tab-deduction-setup')">Thiết lập giảm trừ</button>
             <button class="btn" onclick="switchTab('tab-tax-calculation')">Tính thuế</button>
+            <button class="btn" onclick="switchTab('tab-salary-tax-view')">Xem lương và thuế</button>
             <button class="btn" onclick="switchTab('tab-tax-summary')">Xem quyết toán thuế</button>
         </div>
 
@@ -273,6 +274,69 @@
                 </div>
             </div>
 
+            <!-- Tab: Xem lương và thuế -->
+            <div id="tab-salary-tax-view" class="tab-content" style="display: none;">
+                <h2>Xem lương và thuế</h2>
+                <div class="filter-section">
+                    <!-- Chọn phòng ban -->
+                    <label for="department-view">Chọn phòng ban:</label>
+                    <select id="department-view" class="filter-input">
+                        <option value="marketing">Phòng Marketing</option>
+                        <option value="sales">Phòng Kinh doanh</option>
+                        <option value="hr">Phòng Nhân sự</option>
+                        <option value="business">Phòng Kinh doanh</option>
+                    </select>
+
+                    <!-- Chọn tháng -->
+                    <label for="month-view">Chọn tháng:</label>
+                    <select id="month-view" class="filter-input">
+                        <option value="1">Tháng 1</option>
+                        <option value="2">Tháng 2</option>
+                        <option value="3">Tháng 3</option>
+                        <option value="4">Tháng 4</option>
+                        <option value="5">Tháng 5</option>
+                        <option value="6">Tháng 6</option>
+                        <option value="7">Tháng 7</option>
+                        <option value="8">Tháng 8</option>
+                        <option value="9">Tháng 9</option>
+                        <option value="10">Tháng 10</option>
+                        <option value="11">Tháng 11</option>
+                        <option value="12">Tháng 12</option>
+                    </select>
+
+                    <!-- Nhập năm -->
+                    <label for="year-view">Nhập năm:</label>
+                    <input type="number" id="year-view" class="filter-input" placeholder="Nhập năm">
+
+                    <!-- Nút tìm kiếm -->
+                    <button class="search-btn" onclick="viewSalaryAndTax()">Tìm kiếm</button>
+                </div>
+
+                <!-- Bảng hiển thị lương và thuế -->
+                <div class="table-container" id="salary-tax-table-container" style="display: none;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Họ và tên</th>
+                                <th>MSNV</th>
+                                <th>MS thuế</th>
+                                <th>Lương</th>
+                                <th>Thuế</th>
+                            </tr>
+                        </thead>
+                        <tbody id="salary-tax-table-body">
+                            <!-- Nội dung sẽ được thêm bằng JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="summary">
+                    <p id="summary-department">Bạn đã tìm kiếm: <span id="summary-department-name"></span></p>
+                    <p id="summary-total-salary">Tổng lương: <span id="summary-salary">0</span> VND</p>
+                    <p id="summary-total-tax">Tổng thuế: <span id="summary-tax">0</span> VND</p>
+                </div>
+            </div>
+
             <!-- Tab: Xem quyết toán thuế -->
             <div id="tab-tax-summary" class="tab-content">
                 <h2>Xem quyết toán thuế</h2>
@@ -287,7 +351,7 @@
                     <input type="number" id="yearInput" class="filter-input" placeholder="Nhập năm">
                     <button class="search-btn" onclick="search()">Tìm kiếm</button>
                 </div>
-
+            
                 <div id="table-container" class="table-container" style="display: none;">
                     <table>
                         <thead>
@@ -296,8 +360,10 @@
                                 <th>Họ tên</th>
                                 <th>MSNV</th>
                                 <th>MS thuế</th>
-                                <th>Lương</th>
-                                <th>Thuế</th>
+                                <th>Tổng lương</th>
+                                <th>Tổng thuế đã nộp</th>
+                                <th>Tổng thuế phải nộp</th>
+                                <th>Quyết toán</th>
                             </tr>
                         </thead>
                         <tbody id="table-body">
@@ -305,13 +371,15 @@
                         </tbody>
                     </table>
                 </div>
-
+            
                 <footer id="footer" style="display: none;">
                     <p id="total-salary">Tổng lương: 0</p>
-                    <p id="total-tax">Tổng thuế: 0</p>
+                    <p id="total-tax-paid">Tổng thuế đã nộp: 0</p>
+                    <p id="total-tax-due">Tổng thuế phải nộp: 0</p>
+                    <p id="total-reconciliation">Tổng quyết toán: 0</p>
                     <a href="#" class="export">Xuất báo cáo</a>
                 </footer>
-            </div>
+            </div>            
         </div>
     </div>
 

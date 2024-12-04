@@ -289,3 +289,12 @@ button:hover i {
 .deduction-box {
   margin-bottom: 20px;
 }
+
+.summary {
+  margin-top: 20px;
+  font-weight: bold;
+  font-size: 16px;
+}
+.summary p {
+  margin: 5px 0;
+}
