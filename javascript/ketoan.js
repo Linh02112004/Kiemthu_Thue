@@ -390,6 +390,34 @@ function saveSalaries() {
   console.log('Dữ liệu lương:', salaries);
 }
 
+function searchDeduction() {
+  const month = document.getElementById('deduction-month').value;
+  const year = document.getElementById('deduction-year').value;
+
+  // Kiểm tra nếu năm chưa được điền
+  if (!year) {
+      alert('Vui lòng nhập năm!');
+      return;
+  }
+
+  // Xử lý tìm kiếm giảm trừ theo tháng và năm
+  // Giả sử bạn sẽ thực hiện các bước sau:
+  // 1. Gửi yêu cầu đến server hoặc API để lấy dữ liệu giảm trừ
+  // 2. Cập nhật thông tin giảm trừ lên giao diện
+
+  // Dữ liệu mẫu
+  const deductionData = {
+      month: month,
+      year: year,
+      selfDeduction: 5000000, // Giảm trừ cho bản thân
+      dependentDeduction: 3000000 // Giảm trừ người phụ thuộc
+  };
+
+  // Cập nhật các trường input khi tìm kiếm (nếu có thể)
+  document.getElementById('self-deduction').value = deductionData.selfDeduction;
+  document.getElementById('dependent-deduction').value = deductionData.dependentDeduction;
+}
+
 function setupDeduction() {
   const month = document.getElementById('deduction-month').value;
   const year = document.getElementById('deduction-year').value;
