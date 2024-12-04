@@ -1,3 +1,7 @@
+window.onload = function() {
+  switchTab('tab-employee-management');
+};
+
 // Dữ liệu mẫu cho tab "Xem quyết toán thuế"
 const taxData = {
   marketing: [
