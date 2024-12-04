@@ -532,7 +532,7 @@ function viewSalaryAndTax() {
   // Dữ liệu mẫu (thay bằng dữ liệu thực từ hệ thống)
   const sampleData = [
       { name: 'Nguyễn Văn A', msnv: '001', taxCode: '123456', salary: 20000000, tax: 2000000 },
-      { name: 'Trần Thị B', msnv: '002', taxCode: '654321', salary: 25000000, tax: 2500000 },
+     { name: 'Trần Thị B', msnv: '002', taxCode: '654321', salary: 25000000, tax: 2500000 },
   ];
 
   // Xóa dữ liệu cũ
@@ -566,3 +566,80 @@ function viewSalaryAndTax() {
   tableContainer.style.display = 'block';
 }
 
+document.getElementById("exportButton").addEventListener("click", function() {
+  const selectedFormat = document.getElementById("fileFormat").value;
+  const tableBody = document.getElementById("table-body");
+  const rows = Array.from(tableBody.rows);
+
+  // Tạo nội dung mặc định cho báo cáo khi không có dữ liệu
+  const defaultData = [
+      { stt: "1", hoTen: "Chưa có dữ liệu", msNV: "", msThue: "", tongLuong: "0", tongThueDaNop: "0", tongThuePhaiNop: "0", quyetToan: "0" }
+  ];
+
+  // Kiểm tra xem bảng có dữ liệu hay không
+  const dataToExport = rows.length > 0 ? rows : defaultData;
+
+  if (selectedFormat === "csv") {
+      // Xuất dữ liệu dưới dạng CSV
+      let csvContent = "STT,Họ tên,MSNV,MS thuế,Tổng lương,Tổng thuế đã nộp,Tổng thuế phải nộp,Quyết toán\n"; // Tiêu đề cột
+      dataToExport.forEach(row => {
+          const cells = Array.from(row.cells).map(cell => cell.textContent);
+          csvContent += cells.join(",") + "\n";
+      });
+
+      let blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      let url = URL.createObjectURL(blob);
+      let a = document.createElement("a");
+      a.href = url;
+      a.download = "bao_cao.csv"; // Tên file tải về
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+  } else if (selectedFormat === "pdf") {
+      // Xuất dữ liệu dưới dạng PDF
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+
+      // Tiêu đề cột
+      doc.text("STT, Họ tên, MSNV, MS thuế, Tổng lương, Tổng thuế đã nộp, Tổng thuế phải nộp, Quyết toán", 10, 10);
+      let y = 20; // Vị trí y để vẽ các dòng
+
+      dataToExport.forEach((row, index) => {
+          const cells = Array.from(row.cells).map(cell => cell.textContent);
+          doc.text(cells.join(", "), 10, y);
+          y += 10; // Tăng vị trí y cho dòng tiếp theo
+      });
+
+      doc.save('bao_cao.pdf');
+  }
+});
+
+// Hàm hiển thị bảng dữ liệu
+function displaySalaryTaxData(data) {
+  const tableBody = document.getElementById("table-body");
+  tableBody.innerHTML = ""; // Xóa nội dung hiện tại
+
+  data.forEach((item, index) => {
+      const row = document.createElement("tr");
+      row.innerHTML = `
+          <td>${index + 1}</td>
+          <td>${item.hoTen}</td>
+          <td>${item.msNV}</td>
+          <td>${item.msThue}</td>
+          <td>${item.tongLuong}</td>
+          <td>${item.tongThueDaNop}</td>
+          <td>${item.tongThuePhaiNop}</td>
+          <td>${item.quyetToan}</td>
+      `;
+      tableBody.appendChild(row);
+  });
+
+  // Hiển thị bảng và footer nếu có dữ liệu
+  if (data.length > 0) {
+      document.getElementById("table-container").style.display = "block";
+      document.getElementById("footer").style.display = "block";
+  }
+}
+
+// Gọi hàm để lấy dữ liệu khi tải trang
+fetchSalaryTaxData();
